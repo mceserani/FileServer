@@ -9,17 +9,9 @@
 - Esempio di esecuzione del server
 	java fileServer 10000
 	
-	
+    ```
 	String path = "C:\Users\m_ces\Documents\Video Scuola\5 AIA 2122\Appunti\Sistemi e Reti\40\MyThread.java";
-	
 	File f = new File(path);
-	
 	DataOutputStream fout = new DataOutputStream(new FileOutputStream(path));
-	
 	DataInputStream fin = new DataInputStream(new FileInputStream(path));
-	
-	int b = 0;
-	
-	fout.write(b)
-	
-	b = fin.read();
+	```
