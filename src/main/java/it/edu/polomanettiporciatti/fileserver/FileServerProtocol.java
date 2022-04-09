@@ -3,6 +3,7 @@ package it.edu.polomanettiporciatti.fileserver;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.Socket;
 
@@ -21,8 +22,11 @@ public class FileServerProtocol extends Thread{
     @Override
     public void run() {
 
-        // Receive filename from client
+        File file = null;
+        DataOutputStream fileOut = null;
         String fileName = null;
+
+        // Receive filename from client
         try {
             fileName = in.readUTF();
         } catch (IOException e) {
@@ -35,27 +39,36 @@ public class FileServerProtocol extends Thread{
             return;
         }
 
-        // Check if the file exists
-        File file = new File(fileName);
-        if (file.exists()) {
-            // If exists send error message
-            // and close the socket
-            try {
+        try {
+
+            // Check if the file exists
+            file = new File(fileName);
+            if (file.exists()) {
+                // If exists send error message
+                // and close the socket  
                 out.writeUTF("KO");
                 clientSocket.close();
-            } catch (IOException e) {
-                e.printStackTrace();
+                return;
             }
-            return;
+
+            // Else, if the file does not exist, send OK
+            out.writeUTF("OK");
+
+            // Receives the binary file from the client
+            // and write it to the file system
+            fileOut = new DataOutputStream(new FileOutputStream(file.getPath()));
+            byte[] buffer = new byte[1024];
+            int bytesRead;
+            while ((bytesRead = in.read(buffer)) != -1) {
+                fileOut.write(buffer, 0, bytesRead);
+            }
+           
+            // Close the socket
+            clientSocket.close();
+
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-
-        // Else, if the file does not exist, send OK
-
-        // Receives the file from the client
-        // and write it to the file system
-        
-
-        // Close the socket
     
     }
 
