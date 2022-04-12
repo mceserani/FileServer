@@ -62,6 +62,8 @@ public class FileServerProtocol extends Thread{
             while ((bytesRead = in.read(buffer)) != -1) {
                 fileOut.write(buffer, 0, bytesRead);
             }
+
+            fileOut.close();
            
             // Close the socket
             clientSocket.close();
